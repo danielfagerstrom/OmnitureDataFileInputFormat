@@ -1,7 +1,10 @@
 package com.tgam.hadoop.mapreduce;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -37,6 +40,8 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 	private EscapedLineReader lineReader;
 	private LongWritable key = null;
 	private Text value = null; 
+	
+	Path path;
 
 	@Override
 	public void initialize(InputSplit genericSplit, TaskAttemptContext context)
@@ -53,22 +58,34 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 		// Open the file and seek to the start of the split
 		FileSystem fs = file.getFileSystem(job);
 		FSDataInputStream fileIn = fs.open(split.getPath());
-		boolean skipFirstLine = false;
-		if (codec != null) {
-			lineReader = new EscapedLineReader(codec.createInputStream(fileIn), job);
-			end = Long.MAX_VALUE;
-		} else {
-			if (start != 0) {
-				skipFirstLine = true;
-				--start;
-				fileIn.seek(start);
+		fileIn.seek(start);
+		
+		lineReader = buildEscapedLineReader(split.getPath(), fileIn, codec, job);
+		pos = start;
+		/*
+		
+			path = split.getPath();
+			
+			// LOG.warn("Path is " + path.getName() );
+			
+			boolean skipFirstLine = false;
+			if (codec != null) {
+				lineReader = new EscapedLineReader(codec.createInputStream(fileIn), job);
+				end = Long.MAX_VALUE;
+			} else {
+				if (start != 0) {
+					skipFirstLine = true;
+					--start;
+					fileIn.seek(start);
+				}
+				lineReader = new EscapedLineReader(fileIn, job);
 			}
-			lineReader = new EscapedLineReader(fileIn, job);
-		}
-		if (skipFirstLine) {
-			start += lineReader.readLine(new Text(), 0, (int) Math.min((long) Integer.MAX_VALUE, end - start));
-		}
-		this.pos = start;
+			if (skipFirstLine) {
+				start += lineReader.readLine(new Text(), 0, (int) Math.min((long) Integer.MAX_VALUE, end - start));
+			}
+			this.pos = start;
+		*/
+		
 	}
 	
 	@Override
@@ -154,10 +171,11 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 				// Otherwise the line is too long and we need to skip this line
 				LOG.warn("Skipped line of size " + bytesRead + " at position " + (pos - bytesRead));
 			}
+			
 		}
 		
 		// Check to see if we actually read a line and return appropriate boolean
-		if (bytesRead == 0 || fields.length != NUMBER_OF_FIELDS) {
+		if (bytesRead == 0 || fields.length != NUMBER_OF_FIELDS || fields[1].equals("browser")) {
 			key = null;
 			value = null;
 			return false;
@@ -165,5 +183,39 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 			return true;
 		}
 	}
-
+	
+	
+	EscapedLineReader buildEscapedLineReader(Path path, FSDataInputStream fileIn, CompressionCodec codec, Configuration job) throws IOException {
+		EscapedLineReader lineReader = null;
+		String lcase =path.getName().toLowerCase();
+		InputStream inputStream = fileIn;
+		if ( codec !=null ) {
+			 inputStream = codec.createInputStream(fileIn);
+		}
+		
+		boolean isTar = lcase.endsWith(".tar") || lcase.endsWith(".tar.gz") || lcase.endsWith(".tgz");
+		if (isTar) {
+			TarArchiveInputStream tarInputStream = new TarArchiveInputStream(inputStream);
+			TarArchiveEntry candidate = tarInputStream.getNextTarEntry();
+			TarArchiveEntry hit_time_file = null;
+			
+			while ( candidate != null ) {
+				if ( candidate.getName().toLowerCase().endsWith("hit_data.tsv") ) {
+					hit_time_file = candidate;
+					break;
+				}
+				candidate = tarInputStream.getNextTarEntry();
+			}
+			
+			if ( hit_time_file != null ) {
+				lineReader = new EscapedLineReader(tarInputStream, job);
+			}
+		} else {
+			lineReader = new EscapedLineReader(inputStream, job);
+			end = Long.MAX_VALUE;
+		}
+		
+		return lineReader;
+	}
+	
 }
