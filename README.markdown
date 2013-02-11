@@ -31,3 +31,4 @@ To use `OmnitureDataFileInputFormat` in a Pig script, you will have to register 
     REGISTER path/to/jar/OmnitureDataInputFileFormat.jar
     REGISTER path/to/jar/OmnitureTextLoader.jar
     ...
+        
