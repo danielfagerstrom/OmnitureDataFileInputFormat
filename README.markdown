@@ -32,3 +32,6 @@ To use `OmnitureDataFileInputFormat` in a Pig script, you will have to register 
     REGISTER path/to/jar/OmnitureTextLoader.jar
     ...
         
+## Credits
+
+Uses code from http://code.google.com/p/javagnutar/ for large .tar file support.

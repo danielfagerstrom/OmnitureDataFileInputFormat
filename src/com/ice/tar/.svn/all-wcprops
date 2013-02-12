@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/18/trunk/javagnutar/src/com/ice/tar
+END
+TarBuffer.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/9/trunk/javagnutar/src/com/ice/tar/TarBuffer.java
+END
+TarInputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/9/trunk/javagnutar/src/com/ice/tar/TarInputStream.java
+END
+TarOutputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/18/trunk/javagnutar/src/com/ice/tar/TarOutputStream.java
+END
+TarConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/14/trunk/javagnutar/src/com/ice/tar/TarConstants.java
+END
+TarGzOutputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/3/trunk/javagnutar/src/com/ice/tar/TarGzOutputStream.java
+END
+TarFileUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/18/trunk/javagnutar/src/com/ice/tar/TarFileUtil.java
+END
+Tar.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/17/trunk/javagnutar/src/com/ice/tar/Tar.java
+END
+TarEntry.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/18/trunk/javagnutar/src/com/ice/tar/TarEntry.java
+END
+InvalidHeaderException.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/3/trunk/javagnutar/src/com/ice/tar/InvalidHeaderException.java
+END

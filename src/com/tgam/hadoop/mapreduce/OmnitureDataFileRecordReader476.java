@@ -3,8 +3,6 @@ package com.tgam.hadoop.mapreduce;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -20,6 +18,8 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
+import com.ice.tar.TarEntry;
+import com.ice.tar.TarInputStream;
 import com.tgam.hadoop.util.EscapedLineReader;
 
 /**
@@ -58,6 +58,10 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 		// Open the file and seek to the start of the split
 		FileSystem fs = file.getFileSystem(job);
 		FSDataInputStream fileIn = fs.open(split.getPath());
+		
+//		start = 0;
+		
+		LOG.warn("START=" + start);
 		fileIn.seek(start);
 		
 		lineReader = buildEscapedLineReader(split.getPath(), fileIn, codec, job);
@@ -194,22 +198,30 @@ public class OmnitureDataFileRecordReader476 extends RecordReader<LongWritable, 
 		}
 		
 		boolean isTar = lcase.endsWith(".tar") || lcase.endsWith(".tar.gz") || lcase.endsWith(".tgz");
+		
 		if (isTar) {
-			TarArchiveInputStream tarInputStream = new TarArchiveInputStream(inputStream);
-			TarArchiveEntry candidate = tarInputStream.getNextTarEntry();
-			TarArchiveEntry hit_time_file = null;
+			TarInputStream tarInputStream = null;
+			tarInputStream = new TarInputStream(inputStream);
+			
+			TarEntry candidate = tarInputStream.getNextEntry();
+			TarEntry hit_time_file = null;
+			
+//			ArchiveEntry candidate = tarInputStream.getNextEntry();
+//			ArchiveEntry hit_time_file = null;
 			
 			while ( candidate != null ) {
+				LOG.warn("NAME=" + candidate.getName() );
 				if ( candidate.getName().toLowerCase().endsWith("hit_data.tsv") ) {
 					hit_time_file = candidate;
 					break;
 				}
-				candidate = tarInputStream.getNextTarEntry();
+				candidate = tarInputStream.getNextEntry();
 			}
 			
 			if ( hit_time_file != null ) {
 				lineReader = new EscapedLineReader(tarInputStream, job);
 			}
+			
 		} else {
 			lineReader = new EscapedLineReader(inputStream, job);
 			end = Long.MAX_VALUE;
