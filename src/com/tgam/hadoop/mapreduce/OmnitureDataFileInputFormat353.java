@@ -8,11 +8,11 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
  * @author Mike Sukmanowsky (<a href="mailto:mike.sukmanowsky@gmail.com">mike.sukmanowsky@gmail.com</a>)
  *
  */
-public class OmnitureDataFileInputFormat227 extends OmnitureDataFileInputFormat {
-	
-	@Override
-	public OmnitureDataFileRecordReader227 createRecordReader(InputSplit split, TaskAttemptContext tac) {
-		return new OmnitureDataFileRecordReader227();
-	}
-	
+public class OmnitureDataFileInputFormat353 extends OmnitureDataFileInputFormat {
+
+    @Override
+    public OmnitureDataFileRecordReader353 createRecordReader(InputSplit split, TaskAttemptContext tac) {
+        return new OmnitureDataFileRecordReader353();
+    }
+
 }

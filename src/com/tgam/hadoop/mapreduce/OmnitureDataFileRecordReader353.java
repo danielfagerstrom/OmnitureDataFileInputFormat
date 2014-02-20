@@ -5,13 +5,11 @@ package com.tgam.hadoop.mapreduce;
  * @author Mike Sukmanowsky (<a href="mailto:mike.sukmanowsky@gmail.com">mike.sukmanowsky@gmail.com</a>)
  *
  */
-public class OmnitureDataFileRecordReader227 extends OmnitureDataFileRecordReader {
+public class OmnitureDataFileRecordReader353 extends OmnitureDataFileRecordReader {
 
-    public static final int NUMBER_OF_FIELDS = 227;
+    public static final int NUMBER_OF_FIELDS = 353;
 
-    public OmnitureDataFileRecordReader227() {
+    public OmnitureDataFileRecordReader353() {
         super(NUMBER_OF_FIELDS);
     }
-	
-
 }
