@@ -26,7 +26,8 @@ import com.tgam.hadoop.util.EscapedLineReader;
 public class OmnitureDataFileRecordReader implements RecordReader<LongWritable, Text> {
 	
 	private static final Log LOG = LogFactory.getLog(OmnitureDataFileRecordReader.class.getName());
-	private static final int NUMBER_OF_FIELDS = 227;
+	// private static final int NUMBER_OF_FIELDS = 227;
+	private static final int NUMBER_OF_FIELDS = 554;
 	
 	private CompressionCodecFactory compressionCodecs = null;
 	private long start;
